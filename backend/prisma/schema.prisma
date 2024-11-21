@@ -1,0 +1,47 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model drivers {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  car         String
+  reviews     reviews[] @relation("DriverReviews")
+  value       Float
+  minKm       Int
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  deleted_at  DateTime? @db.Timestamp(6)
+}
+
+model reviews {
+  id         String    @id @default(uuid())
+  driver     drivers   @relation("DriverReviews", fields: [driverId], references: [id])
+  driverId   Int
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime? @db.Timestamp(6)
+}
+
+model customers {
+  id         String    @id @default(uuid())
+  rides      rides[]   @relation("CustomerRides")
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime? @db.Timestamp(6)
+}
+
+model rides {
+  id         String     @id @default(uuid())
+  customer   customers? @relation("CustomerRides", fields: [customerId], references: [id])
+  customerId String?
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  deleted_at DateTime?  @db.Timestamp(6)
+}

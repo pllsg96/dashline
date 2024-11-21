@@ -1,0 +1,14 @@
+FROM node:20.12.1
+
+WORKDIR /app
+
+COPY package.json .
+COPY package-lock.json .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3020
+
+CMD ["npm", "run", "dev"]

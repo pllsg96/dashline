@@ -1,0 +1,20 @@
+# Use uma imagem base oficial do Node.js
+FROM node:16
+
+# Defina o diretório de trabalho dentro do contêiner
+WORKDIR /app
+
+# Copie o package.json e o package-lock.json para o diretório de trabalho
+COPY package*.json ./
+
+# Instale todas as dependências, incluindo devDependencies
+RUN npm install
+
+# Copie o restante do código do aplicativo
+COPY . .
+
+# Exponha a porta que o aplicativo irá escutar
+EXPOSE 3025
+
+# Comando para iniciar o aplicativo
+CMD ["npm", "run", "start:dev"]

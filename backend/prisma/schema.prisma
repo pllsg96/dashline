@@ -13,18 +13,18 @@ model drivers {
   name        String
   description String
   car         String
-  reviews     reviews[] @relation("DriverReviews")
   value       Float
   minKm       Int
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
   deleted_at  DateTime? @db.Timestamp(6)
-}
 
+  review      reviews?  @relation("DriverReview")
+}
 model reviews {
   id         String    @id @default(uuid())
-  driver     drivers   @relation("DriverReviews", fields: [driverId], references: [id])
-  driverId   Int
+  driver     drivers   @relation("DriverReview", fields: [driverId], references: [id])
+  driverId   Int       @unique
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   deleted_at DateTime? @db.Timestamp(6)

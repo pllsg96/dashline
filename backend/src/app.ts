@@ -1,11 +1,12 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
 import costumersRouter from './routes/customers.routes';
 import driversRouter from './routes/drivers.routes';
 import reviewsRouter from './routes/reviews.routes';
 import ridesRouter from './routes/rides.routes';
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const app = express();
 
 // Middleware para parsear JSON

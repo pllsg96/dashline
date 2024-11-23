@@ -17,9 +17,10 @@ class RidesController {
     }
   }
 
-  public async estimateRide(_req: Request, res: Response, next: NextFunction): Promise<any>  {
+  public async estimateRide(req: Request, res: Response, next: NextFunction): Promise<any>  {
     try {
-      const { status, result } = await this.ridesService.estimateRide();
+      const { address } = req.body;
+      const { status, result } = await this.ridesService.estimateRide(address);
       return res.status(status).json(result);
     } catch (error) {
       return next(error);

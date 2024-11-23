@@ -10,10 +10,10 @@ const app = express();
 
 // Middleware para parsear JSON
 app.use(express.json());
-app.use('/costumers', costumersRouter);
-app.use('/drivers', driversRouter);
-app.use('/reviews', reviewsRouter);
-app.use('/rides', ridesRouter);
+app.use('/costumer', costumersRouter);
+app.use('/driver', driversRouter);
+app.use('/review', reviewsRouter);
+app.use('/ride', ridesRouter);
 
 // // Rota de exemplo
 // app.get('/', (req, res) => {

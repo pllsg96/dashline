@@ -14,6 +14,14 @@ class RidesService {
     const from = await getCoordinates(origin)
     const to = await getCoordinates(destination)
     const routeTrajectory = await getRoute(from, to)
+    const convertMetersToKm = (routeTrajectory.distanceMeters)/1000
+    const drivers = await prisma.drivers.findMany({
+      where: {
+        minKm: {
+          lte: 2
+        }
+      }
+    });
     const formatedData = {
       "origin": {
         "latitude": from.lat,
@@ -27,21 +35,21 @@ class RidesService {
       "duration": routeTrajectory.duration,
       "options": [
         {
-          "id": "id",
-          "name": "name",
-          "description": "description",
-          "vehicle": "vehicle",
-          "review":
-            { 
-              "rating": "rating",
-              "comment": "comment"
-            },
-          "value": "value"
+          // "id": "id",
+          // "name": "name",
+          // "description": "description",
+          // "vehicle": "vehicle",
+          // "review":
+          //   {
+          //     "rating": "rating",
+          //     "comment": "comment"
+          //   },
+          // "value": "value"
+          drivers
         },
       ],
       "routeResponse": routeTrajectory
     }
-    // const rides = await prisma.rides.findMany();
     return { status: 200, result: formatedData };
   }
 }

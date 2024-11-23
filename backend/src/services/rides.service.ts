@@ -1,5 +1,6 @@
 import prisma from '../db/connection';
 import getCoordinates from '../utils/getCordinates';
+import getRoute from '../utils/getRoutes';
 
 class RidesService {  
 
@@ -9,10 +10,12 @@ class RidesService {
     return { status: 200, result: rides };
   }
 
-  public async estimateRide(address: string) {
-    const from = await getCoordinates(address)
+  public async estimateRide(origin: string, destination: string, userId: string) {
+    const from = await getCoordinates(origin)
+    const to = await getCoordinates(destination)
+    const routeTrajectory = await getRoute(from, to)
     // const rides = await prisma.rides.findMany();
-    return { status: 200, result: from };
+    return { status: 200, result: routeTrajectory };
   }
 }
 

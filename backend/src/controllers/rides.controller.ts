@@ -19,7 +19,7 @@ class RidesController {
 
   public async estimateRide(req: Request, res: Response, next: NextFunction): Promise<any>  {
     try {
-      const { origin, destination, userId} = req.body;
+      const { origin, destination, userId } = req.body;
       const { status, result } = await this.ridesService.estimateRide(origin, destination, userId);
       return res.status(status).json(result);
     } catch (error) {

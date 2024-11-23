@@ -11,6 +11,7 @@ class RidesService {
   }
 
   public async estimateRide(origin: string, destination: string, userId: string) {
+    // console.log(origin, destination, '-------------------------')
     const from = await getCoordinates(origin)
     const to = await getCoordinates(destination)
     const routeTrajectory = await getRoute(from, to)

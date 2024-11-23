@@ -25,6 +25,8 @@ model reviews {
   id         String    @id @default(uuid())
   driver     drivers   @relation("DriverReview", fields: [driverId], references: [id])
   driverId   Int       @unique
+  rating     Int
+  comment    String
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   deleted_at DateTime? @db.Timestamp(6)

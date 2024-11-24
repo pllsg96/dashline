@@ -35,8 +35,8 @@ class RidesService {
           latitude: to.lat,
           longitude: to.lng,
         },
-        distance: routeTrajectory.distanceMeters,
-        duration: routeTrajectory.duration,
+        "distance": routeTrajectory.routes[0].distanceMeters,
+        "duration": routeTrajectory.routes[0].duration,
         options: drivers.map((driver) => {
           const { id, name, description, vehicle, value, review } = driver;
           return {

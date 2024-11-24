@@ -20,36 +20,40 @@ class RidesService {
         minKm: {
           lte: 2
         }
-      }
-    });
-    const formatedData = {
-      "origin": {
-        "latitude": from.lat,
-        "longitude": from.lng,
       },
-      "destination": {
-        "latitude": to.lat,
-        "longitude": to.lng,
-      },
-      "distance": routeTrajectory.distanceMeters,
-      "duration": routeTrajectory.duration,
-      "options": [
-        {
-          // "id": "id",
-          // "name": "name",
-          // "description": "description",
-          // "vehicle": "vehicle",
-          // "review":
-          //   {
-          //     "rating": "rating",
-          //     "comment": "comment"
-          //   },
-          // "value": "value"
-          drivers
+        include: {
+          review: true,
         },
-      ],
-      "routeResponse": routeTrajectory
-    }
+      });
+
+      const formatedData = {
+        origin: {
+          latitude: from.lat,
+          longitude: from.lng,
+        },
+        destination: {
+          latitude: to.lat,
+          longitude: to.lng,
+        },
+        distance: routeTrajectory.distanceMeters,
+        duration: routeTrajectory.duration,
+        options: drivers.map((driver) => {
+          const { id, name, description, vehicle, value, review } = driver;
+          return {
+            id,
+            name,
+            description,
+            vehicle,
+            review: review ? {
+              rating: review.rating,
+              comment: review.comment,
+            } : null,
+            value,
+          };
+        }),
+        routeResponse: routeTrajectory,
+      };
+
     return { status: 200, result: formatedData };
   }
 }

@@ -13,7 +13,7 @@ async function main() {
     data: {
       name: 'Homer Simpson',
       description: 'Olá! Sou o Homer, seu motorista camarada! Relaxe e aproveite o passeio, com direito a rosquinhas e boas risadas (e talvez alguns desvios).',
-          car: 'Plymouth Valiant 1973 rosa e enferrujado',
+          vehicle: 'Plymouth Valiant 1973 rosa e enferrujado',
           review: {
               create: {
                   rating: 2,

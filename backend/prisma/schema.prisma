@@ -19,7 +19,8 @@ model drivers {
   updated_at  DateTime  @updatedAt
   deleted_at  DateTime? @db.Timestamp(6)
 
-  review reviews? @relation("DriverReview")
+  review      reviews? @relation("DriverReview")
+  rides       rides[]  @relation("DriverRides")  // Adiciona a relação com as corridas
 }
 
 model reviews {
@@ -35,17 +36,26 @@ model reviews {
 
 model customers {
   id         String    @id @default(uuid())
-  rides      rides[]   @relation("CustomerRides")
+  // rides      rides[]   @relation("CustomerRides")
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   deleted_at DateTime? @db.Timestamp(6)
 }
 
 model rides {
-  id         String     @id @default(uuid())
-  customer   customers? @relation("CustomerRides", fields: [customerId], references: [id])
-  customerId String?
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-  deleted_at DateTime?  @db.Timestamp(6)
+  id          String     @id @default(uuid())
+  // customer    customers? @relation("CustomerRides", fields: [customerId], references: [id])
+  customerId  String?
+  ride_id     Int        @default(autoincrement())
+  date        DateTime
+  origin      String
+  destination String
+  distance    Int
+  duration    String
+  value       Float
+  driver      drivers    @relation("DriverRides", fields: [driverId], references: [id])  // Relacionamento com o driver
+  driverId    Int        // Adiciona o campo driverId como chave estrangeira
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  deleted_at  DateTime?  @db.Timestamp(6)
 }

@@ -1,10 +1,8 @@
 import app from './app';
 import prisma from './db/connection';
 
-const PORT = process.env.PORT || 3015;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(3001, '0.0.0.0', () => {
+  console.log('Server running on port 3001');
 });
 
 async function testDatabaseConnection() {

@@ -49,6 +49,8 @@ class RidesController {
     }
   }
 
+  
+
  public async getRidesByCustomerId(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { customer_id } = req.params; // Captura o customer_id da URL

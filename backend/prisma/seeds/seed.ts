@@ -1,13 +1,11 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-// import dotenv from 'dotenv';
-// import path from 'path';
-
-// Carregar variáveis de ambiente do arquivo .env centralizado
-// dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  await prisma.customers.create({
+    data: { id: 'randomIdCustomer'}});
+
   const drivers = [
     {
       id: 1,
@@ -70,7 +68,7 @@ async function main() {
   const createDrivers = async () => {
     for (const driverData of drivers) {
       try {
-        const eachDriver = await prisma.drivers.create({
+        await prisma.drivers.create({
           data: driverData,
         });
       } catch (error) {

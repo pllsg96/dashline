@@ -36,7 +36,8 @@ model reviews {
 
 model customers {
   id         String    @id @default(uuid())
-  // rides      rides[]   @relation("CustomerRides")
+  name       String?
+  rides      rides[]   @relation("CustomerRides")
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   deleted_at DateTime? @db.Timestamp(6)
@@ -44,7 +45,7 @@ model customers {
 
 model rides {
   id          String     @id @default(uuid())
-  // customer    customers? @relation("CustomerRides", fields: [customerId], references: [id])
+  customer    customers? @relation("CustomerRides", fields: [customerId], references: [id])
   customerId  String
   ride_id     Int        @default(autoincrement())
   date        DateTime

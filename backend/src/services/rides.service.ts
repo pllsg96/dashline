@@ -80,20 +80,20 @@ class RidesService {
     const { customer_id, origin, destination, distance, duration, driver, value } = data;
 
     try {
-      // // Verifique se o cliente existe
-      // const findCustomer = await prisma.customer.findUnique({
-      //   where: {
-      //     id: customer_id, // Supondo que o cliente tenha um campo id
-      //   },
-      // });
+      // Verifique se o cliente existe
+      const findCustomer = await prisma.customers.findUnique({
+        where: {
+          id: customer_id, // Supondo que o cliente tenha um campo id
+        },
+      });
 
-      // if (!findCustomer) {
-      //   return {
-      //     status: 404,
-      //     error_code: 'CUSTOMER_NOT_FOUND',
-      //     error_description: `Customer with ID ${customer_id} not found`,
-      //   };
-      // }
+      if (!findCustomer) {
+        return {
+          status: 404,
+          error_code: 'CUSTOMER_NOT_FOUND',
+          error_description: `Customer with ID ${customer_id} not found`,
+        };
+      }
 
       // Verifique se o motorista existe
       const findDriver = await prisma.drivers.findUnique({
@@ -121,10 +121,12 @@ class RidesService {
         };
       }
 
+      console.log(customer_id, '----------')
+
       // Confirmar a rota e criar a corrida
       await prisma.rides.create({
         data: {
-          customerId: customer_id,
+          customer: { connect: { id: findCustomer.id } },
           date: new Date(),
           origin,
           destination,

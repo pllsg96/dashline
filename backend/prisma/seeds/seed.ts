@@ -53,7 +53,7 @@ async function main() {
 
   const resetDatabase = async () => {
     try {
-      // Excluir os registros das tabelas necessárias
+      
       await prisma.reviews.deleteMany();
       await prisma.drivers.deleteMany();
       
@@ -64,7 +64,7 @@ async function main() {
   };
 
 
-  // Função assíncrona para criar motoristas e adicionar ao array
+  
   const createDrivers = async () => {
     for (const driverData of drivers) {
       try {
@@ -77,10 +77,10 @@ async function main() {
     }
   };
 
-  // Resetar o banco de dados antes de adicionar novos dados
+  
   await resetDatabase();
 
-  // Criar motoristas depois de limpar o banco
+  
   await createDrivers();
 
   console.log('Motoristas criados com sucesso');

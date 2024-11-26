@@ -80,10 +80,10 @@ class RidesService {
     const { customer_id, origin, destination, distance, duration, driver, value } = data;
 
     try {
-      // Verifique se o cliente existe
+      
       const findCustomer = await prisma.customers.findUnique({
         where: {
-          id: customer_id, // Supondo que o cliente tenha um campo id
+          id: customer_id, 
         },
       });
 
@@ -95,7 +95,7 @@ class RidesService {
         };
       }
 
-      // Verifique se o motorista existe
+      
       const findDriver = await prisma.drivers.findUnique({
         where: {
           id: driver.id,
@@ -121,9 +121,8 @@ class RidesService {
         };
       }
 
-      console.log(customer_id, '----------')
 
-      // Confirmar a rota e criar a corrida
+      
       await prisma.rides.create({
         data: {
           customer: { connect: { id: findCustomer.id } },
@@ -149,32 +148,19 @@ class RidesService {
 
 public async getRidesByCustomerId(customer_id: string, driver_id?: string) {
   try {
-      
-    console.log('here ---', customer_id, driver_id)
-
-     // Filtro inicial com customer_id
       const filter: any = { customerId: customer_id };
 
       if (driver_id) {
-        filter.driverId =  +driver_id;  // Relaciona o driver ao filtro
+        filter.driverId =  +driver_id;  
       }
-    
-    console.log('here ---', filter)
-
-    const rides2 = await prisma.rides.findMany({});
-    
-    console.log(rides2)
-
-      // Consulta no banco de dados usando o Prisma
+      
       const rides = await prisma.rides.findMany({
         where: filter,
         include: {
-          driver: true,  // Inclui informações do motorista
-          // review: true,  // Inclui avaliações dos motoristas
+          driver: true,  
+          
         },
       });
-      console.log(rides, '------------')
-
       return { status: 200, result: rides };
     } catch (error) {
       return {
@@ -183,7 +169,9 @@ public async getRidesByCustomerId(customer_id: string, driver_id?: string) {
         error_description: 'Failed to retrieve rides from the database',
       };
     }
-  }
+}
+  
+  
 }
 
 export default RidesService;

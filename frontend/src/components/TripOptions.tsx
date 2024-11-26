@@ -26,16 +26,36 @@ const TripOptions: React.FC = () => {
   // Construir a URL do mapa estático com caminho
   const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?size=600x600&maptype=roadmap&markers=color:blue%7Clabel:O%7C${originCoords}&markers=color:red%7Clabel:D%7C${destinationCoords}&path=color:0x0000ff|weight:5|${originCoords}|${destinationCoords}&key=${googleMapsApiKey}`;
 
-  const handleChooseDriver = async (driverId: string) => {
-    try {
-      const response = await fetch(`https://api.exemplo.com/choose/${driverId}`, {
-        method: 'POST',
+const handleChooseDriver = async (driver: any) => {
+  try {
+      
+    const formatData = {
+          customer_id: tripData.customer_id,
+          origin: tripData.origin,
+          destination: tripData.destination,
+          distance: tripData.distance,
+          duration: tripData.duration,
+          driver: {
+            id: driver.id,
+            name: driver.name,
+          },
+          value: driver.value * (tripData.distance / 1000),
+        }
+      const response = await fetch('http://localhost:3001/ride/confirm', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formatData)
       });
+
+      console.log(formatData, '-----------', tripData)
 
       if (!response.ok) {
         throw new Error('Erro ao confirmar a viagem');
       }
 
+      // Após confirmar a viagem, redireciona para a tela de histórico
       navigate('/history');
     } catch (err: any) {
       setError(err.message);
@@ -63,7 +83,7 @@ const TripOptions: React.FC = () => {
                 <p>Comentário: {driver.review.comment}</p>
                 <p>Valor: R${driver.value * (tripData.distance / 1000)}</p>
                 <button
-                  onClick={() => handleChooseDriver(driver.id)}
+                  onClick={() => handleChooseDriver(driver)}
                   className="mt-2 bg-green-500 text-white p-2 rounded"
                 >
                   Escolher

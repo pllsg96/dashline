@@ -26,10 +26,11 @@ const TripRequestForm: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log('Dados recebidos:', data);
+      const dataWithCustomerId = {...data, customer_id }
+      console.log('Dados recebidos:', dataWithCustomerId);
 
       // Salvar os dados no contexto
-      setTripData(data);
+      setTripData(dataWithCustomerId);
 
       // Redirecionar para a tela de opções de viagem
       navigate('/options');

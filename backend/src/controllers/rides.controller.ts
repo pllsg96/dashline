@@ -8,37 +8,71 @@ class RidesController {
   constructor() {
     this.ridesService = new RidesService();
   }
-// fazer a tipagem do promise
-  public async findAll(_req: Request, res: Response, next: NextFunction): Promise<any>  {
-    try {
-      const { status, result } = await this.ridesService.findAll();
-      return res.status(status).json(result);
-    } catch (error) {
-      return next(error);
-    }
-  }
 
-  public async estimateRide(req: Request, res: Response, next: NextFunction): Promise<any>  {
+  
+  public async estimateRide(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { origin, destination, customer_id } = req.body;
-      const { status, result } = await this.ridesService.estimateRide(origin, destination, customer_id);
-      return res.status(status).json(result);
+      const { status, result, error_code, error_description } = await this.ridesService.estimateRide(origin, destination, customer_id);
+
+      
+      if (status >= 400) {
+        return res.status(status).json({
+          error_code,
+          error_description
+        });
+      }
+
+      return res.status(status).json(result); // Retorna os dados em caso de sucesso
     } catch (error) {
-      return next(error);
+      return next(error); // Passa o erro para o middleware de tratamento
     }
   }
 
-  public async rideConfirm(req: Request<{}, RideConfirm>, res: Response, next: NextFunction): Promise<any>  {
+  // Tipando a função rideConfirm com o formato esperado
+  public async rideConfirm(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { body } = req;
-      const { status, result } = await this.ridesService.rideConfirm(body as RideConfirm);
+      const data: RideConfirm = req.body;
+      const { status, result, error_code, error_description } = await this.ridesService.rideConfirm(data);
+
+      //
+      if (status >= 400) {
+        return res.status(status).json({
+          error_code,
+          error_description
+        });
+      }
+
       return res.status(status).json(result);
     } catch (error) {
-      return next(error);
+      return next(error); 
+    }
+  }
+
+ public async getRidesByCustomerId(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { customer_id } = req.params; // Captura o customer_id da URL
+      const { driver_id } = req.query; // Captura o driver_id da query string (opcional)
+
+      console.log(customer_id, driver_id, '--------------')
+
+      // Chama o serviço para obter as corridas
+      const { status, result, error_code, error_description } = await this.ridesService.getRidesByCustomerId(customer_id, driver_id as string);
+
+      // Verifica se ocorreu algum erro
+      if (status >= 400) {
+        return res.status(status).json({
+          error_code,
+          error_description
+        });
+      }
+
+      // Retorna as corridas ou resultado
+      return res.status(status).json(result);
+    } catch (error) {
+      return next(error); // Passa o erro para o middleware de tratamento
     }
   }
 }
-
-
 
 export default RidesController;

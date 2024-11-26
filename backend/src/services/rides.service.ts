@@ -1,28 +1,36 @@
-import { connect } from 'http2';
 import prisma from '../db/connection';
-import { Driver, RideConfirm } from '../entities/entities';
 import getCoordinates from '../utils/getCordinates';
 import getRoute from '../utils/getRoutes';
+import { RideConfirm } from '../entities/entities';
+import { connect } from 'http2';
 
-class RidesService {  
-
-
+class RidesService {
   public async findAll() {
-    const rides = await prisma.rides.findMany();
-    return { status: 200, result: rides };
+    try {
+      const rides = await prisma.rides.findMany();
+      return { status: 200, result: rides };
+    } catch (error) {
+      return {
+        status: 500,
+        error_code: 'DATABASE_ERROR',
+        error_description: 'Failed to retrieve rides from the database',
+      };
+    }
   }
 
   public async estimateRide(origin: string, destination: string, customer_id: string) {
-    const from = await getCoordinates(origin)
-    const to = await getCoordinates(destination)
-    const routeTrajectory = await getRoute(from, to)
-    const convertMetersToKm = (routeTrajectory.distanceMeters)/1000
-    const drivers = await prisma.drivers.findMany({
-      where: {
-        minKm: {
-          lte: 2
-        }
-      },
+    try {
+      const from = await getCoordinates(origin);
+      const to = await getCoordinates(destination);
+      const routeTrajectory = await getRoute(from, to);
+      const convertMetersToKm = routeTrajectory.distanceMeters / 1000;
+
+      const drivers = await prisma.drivers.findMany({
+        where: {
+          minKm: {
+            lte: 2,
+          },
+        },
         include: {
           review: true,
         },
@@ -37,8 +45,8 @@ class RidesService {
           latitude: to.lat,
           longitude: to.lng,
         },
-        "distance": routeTrajectory.routes[0].distanceMeters,
-        "duration": routeTrajectory.routes[0].duration,
+        distance: routeTrajectory.routes[0].distanceMeters,
+        duration: routeTrajectory.routes[0].duration,
         options: drivers.map((driver: any) => {
           const { id, name, description, vehicle, value, review } = driver;
           return {
@@ -46,22 +54,48 @@ class RidesService {
             name,
             description,
             vehicle,
-            review: review ? {
-              rating: review.rating,
-              comment: review.comment,
-            } : null,
+            review: review
+              ? {
+                  rating: review.rating,
+                  comment: review.comment,
+                }
+              : null,
             value,
           };
         }),
         routeResponse: routeTrajectory,
       };
 
-    return { status: 200, result: formatedData };
+      return { status: 200, result: formatedData };
+    } catch (error) {
+      return {
+        status: 500,
+        error_code: 'RIDE_ESTIMATION_FAILED',
+        error_description: 'An error occurred while estimating the ride.',
+      };
+    }
   }
 
   public async rideConfirm(data: RideConfirm) {
-    const { customerId, origin, destination, distance, duration, driver, value } = data
+    const { customer_id, origin, destination, distance, duration, driver, value } = data;
 
+    try {
+      // // Verifique se o cliente existe
+      // const findCustomer = await prisma.customer.findUnique({
+      //   where: {
+      //     id: customer_id, // Supondo que o cliente tenha um campo id
+      //   },
+      // });
+
+      // if (!findCustomer) {
+      //   return {
+      //     status: 404,
+      //     error_code: 'CUSTOMER_NOT_FOUND',
+      //     error_description: `Customer with ID ${customer_id} not found`,
+      //   };
+      // }
+
+      // Verifique se o motorista existe
       const findDriver = await prisma.drivers.findUnique({
         where: {
           id: driver.id,
@@ -74,51 +108,80 @@ class RidesService {
       if (!findDriver) {
         return {
           status: 404,
-          error_code: "DRIVER_NOT_FOUND",
-          error_description: `Driver with ID ${driver.id} not found`
+          error_code: 'DRIVER_NOT_FOUND',
+          error_description: `Driver with ID ${driver.id} not found`,
         };
       }
-    
-    if (distance < findDriver.minKm) {
+
+      if (distance < findDriver.minKm) {
+        return {
+          status: 406,
+          error_code: 'INVALID_DISTANCE',
+          error_description: `The distance (${distance} km) is less than the minimum distance (${findDriver.minKm} km) that the driver is willing to drive.`,
+        };
+      }
+
+      // Confirmar a rota e criar a corrida
+      await prisma.rides.create({
+        data: {
+          customerId: customer_id,
+          date: new Date(),
+          origin,
+          destination,
+          distance,
+          duration,
+          driver: { connect: { id: findDriver.id } },
+          value,
+        },
+      });
+
+      return { status: 200, result: { success: true } };
+    } catch (error) {
       return {
-        status: 406,
-        error_code: "INVALID_DISTANCE",
-        error_description: `The distance (${distance} km) is less than the minimum distance (${findDriver.minKm} km) that the driver is willing to drive.`,
+        status: 500,
+        error_code: 'RIDE_CONFIRMATION_FAILED',
+        error_description: 'An error occurred while confirming the ride.',
       };
-    }
-
-    const from = await getCoordinates(origin)
-    const to = await getCoordinates(destination)
-    const routeTrajectory = await getRoute(from, to)
-
-    console.log(routeTrajectory, '---------')
-    if (routeTrajectory.routes.length > 0) {
-      return {
-        status: 406,
-        error_code: "INVALID_DISTANCE",
-        error_description: `There is no route to this origin and destination`,
-      };
-    }
-
-  const persistRide = await prisma.rides.create({
-    data: {
-      customerId,
-      date: new Date(),  // Usando Date() para o campo DateTime
-      origin,
-      destination,
-      distance,
-      duration,
-      driver: { connect: { id: findDriver.id } },  // Relacionando o motorista
-      value,
-    },
-  });
-
-
-    console.log(persistRide, '------------')
-
-
-      return { status: 200, result: { "success": true } };
     }
   }
+
+public async getRidesByCustomerId(customer_id: string, driver_id?: string) {
+  try {
+      
+    console.log('here ---', customer_id, driver_id)
+
+     // Filtro inicial com customer_id
+      const filter: any = { customerId: customer_id };
+
+      if (driver_id) {
+        filter.driverId =  +driver_id;  // Relaciona o driver ao filtro
+      }
+    
+    console.log('here ---', filter)
+
+    const rides2 = await prisma.rides.findMany({});
+    
+    console.log(rides2)
+
+      // Consulta no banco de dados usando o Prisma
+      const rides = await prisma.rides.findMany({
+        where: filter,
+        include: {
+          driver: true,  // Inclui informações do motorista
+          // review: true,  // Inclui avaliações dos motoristas
+        },
+      });
+      console.log(rides, '------------')
+
+      return { status: 200, result: rides };
+    } catch (error) {
+      return {
+        status: 500,
+        error_code: 'DATABASE_ERROR',
+        error_description: 'Failed to retrieve rides from the database',
+      };
+    }
+  }
+}
 
 export default RidesService;

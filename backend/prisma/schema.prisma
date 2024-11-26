@@ -45,7 +45,7 @@ model customers {
 model rides {
   id          String     @id @default(uuid())
   // customer    customers? @relation("CustomerRides", fields: [customerId], references: [id])
-  customerId  String?
+  customerId  String
   ride_id     Int        @default(autoincrement())
   date        DateTime
   origin      String

@@ -14,7 +14,7 @@ export type Driver = {
 };
 // Tipo para a viagem (RideRequest)
 export type RideConfirm = {
-  customerId: string;  // Identificador do cliente
+  customer_id: string;  // Identificador do cliente
   origin: string;      // Local de origem
   destination: string; // Local de destino
   distance: number;    // Distância da viagem

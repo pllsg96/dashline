@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTrip } from '../context/TripContext';
+import { Box, Typography, TextField, Button, Alert, Paper } from '@mui/material';
 
 const TripRequestForm: React.FC = () => {
   const { setTripData } = useTrip();
   const [customer_id, setcustomer_id] = useState<string>('');
   const [origin, setOrigin] = useState<string>('');
   const [destination, setDestination] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string|null>(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,7 +27,7 @@ const TripRequestForm: React.FC = () => {
       }
 
       const data = await response.json();
-      const dataWithInput = {...data, customer_id, "originString": origin, "destinationString": destination }
+      const dataWithInput = { ...data, customer_id, originString: origin, destinationString: destination };
       console.log('Dados recebidos:', dataWithInput);
 
       // Salvar os dados no contexto
@@ -40,36 +41,47 @@ const TripRequestForm: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow">
-      <h2 className="text-xl font-bold mb-4">Solicitação de Viagem</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="ID do Usuário"
+    <Box maxWidth="sm" mx="auto" mt={4} p={2} component={Paper} elevation={3}>
+      <Typography variant="h5" component="h2" gutterBottom>
+        Solicitação de Viagem
+      </Typography>
+      {error && <Alert severity="error">{error}</Alert>}
+      <form onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          label="ID do Usuário"
           value={customer_id}
           onChange={(e) => setcustomer_id(e.target.value)}
-          className="w-full p-2 border rounded"
+          variant="outlined"
+          margin="normal"
         />
-        <input
-          type="text"
-          placeholder="Endereço de Origem"
+        <TextField
+          fullWidth
+          label="Endereço de Origem"
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
-          className="w-full p-2 border rounded"
+          variant="outlined"
+          margin="normal"
         />
-        <input
-          type="text"
-          placeholder="Endereço de Destino"
+        <TextField
+          fullWidth
+          label="Endereço de Destino"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
-          className="w-full p-2 border rounded"
+          variant="outlined"
+          margin="normal"
         />
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          sx={{ mt: 2 }}
+        >
           Estimar Valor
-        </button>
+        </Button>
       </form>
-    </div>
+    </Box>
   );
 };
 

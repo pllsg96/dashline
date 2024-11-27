@@ -82,7 +82,7 @@ function convertSecondsToTime(secondsString) {
         {trips.map((trip) => (
           <li key={trip.id} className="p-4 border rounded shadow">
             <p>Data e Hora: {trip.date}</p>
-            <p>Motorista: {trip.driver.name}</p>
+            <p>Nome do Motorista: {trip.driver.name}</p>
             <p>Origem: {trip.origin}</p>
             <p>Destino: {trip.destination}</p>
             <p>Distância: {trip.distance/1000} Km</p>

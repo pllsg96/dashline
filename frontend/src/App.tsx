@@ -4,6 +4,7 @@ import TripRequestForm from './components/TripRequestForm';
 import TripOptions from './components/TripOptions';
 import TripHistory from './components/TripHistory';
 import { TripProvider } from './context/TripContext';
+import Random from './components/teste';
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
             <Route path="/" element={<TripRequestForm />} />
             <Route path="/options" element={<TripOptions />} />
             <Route path="/history" element={<TripHistory />} />
+            <Route path="/random" element={<Random />} />
           </Routes>
         </div>
       </Router>

@@ -83,8 +83,9 @@ function convertSecondsToTime(secondsString) {
           margin="normal"
         >
           <MenuItem value="Todos">Todos</MenuItem>
-          <MenuItem value="Motorista1">Motorista1</MenuItem>
-          <MenuItem value="Motorista2">Motorista2</MenuItem>
+          <MenuItem value="1">Homer Simpson</MenuItem>
+          <MenuItem value="2">Dominic Toretto</MenuItem>
+          <MenuItem value="3">James Bond</MenuItem>
         </Select>
         <Button
           fullWidth

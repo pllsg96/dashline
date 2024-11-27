@@ -2,7 +2,6 @@ import prisma from '../db/connection';
 import getCoordinates from '../utils/getCordinates';
 import getRoute from '../utils/getRoutes';
 import { RideConfirm } from '../entities/entities';
-import { connect } from 'http2';
 
 class RidesService {
   public async findAll() {
@@ -25,10 +24,24 @@ class RidesService {
       const routeTrajectory = await getRoute(from, to);
       const convertMetersToKm = routeTrajectory.routes[0].distanceMeters / 1000;
 
+      const costumerExist = await prisma.customers.findFirst({
+        where: {
+          id: customer_id,
+        }
+      })
+
+      if (!costumerExist) {
+        return {
+          status: 404,
+          error_code: 'CUSTOMER_NOT_FOUND',
+          error_description: `Customer with ID ${customer_id} not found`,
+        };
+      }
+
       const drivers = await prisma.drivers.findMany({
         where: {
           minKm: {
-            lte: +convertMetersToKm,
+            lte: convertMetersToKm,
           },
         },
         include: {

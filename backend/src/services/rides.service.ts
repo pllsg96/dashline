@@ -169,6 +169,9 @@ public async getRidesByCustomerId(customer_id: string, driver_id?: string) {
       
       const rides = await prisma.rides.findMany({
         where: filter,
+        orderBy: {
+          created_at: 'desc'
+        },
         include: {
           driver: true,  
           

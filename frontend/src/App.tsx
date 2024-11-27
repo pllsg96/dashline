@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import TripRequestForm from './components/TripRequestForm';
-import TripOptions from './components/TripOptions';
-import TripHistory from './components/TripHistory';
+import TripRequestForm from './pages/TripRequestForm';
+import TripOptions from './pages/TripOptions';
+import TripHistory from './pages/TripHistory';
 import { TripProvider } from './context/TripContext';
-import Random from './components/teste';
+import Random from './pages/teste';
 
 const App: React.FC = () => {
   return (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTrip } from '../context/TripContext';
-import { Box, Typography, TextField, Button, Alert, Paper } from '@mui/material';
+import { Box, Typography, TextField, Button, Alert, Paper, Tooltip } from '@mui/material';
 
 const TripRequestForm: React.FC = () => {
   const { setTripData } = useTrip();
@@ -46,7 +46,8 @@ const TripRequestForm: React.FC = () => {
         Solicitação de Viagem
       </Typography>
       {error && <Alert severity="error">{error}</Alert>}
-      <form onSubmit={handleSubmit}>
+  <form onSubmit={handleSubmit}>
+      <Tooltip title="Utilize: 'randomIdCustomer' no ID do usuário">
         <TextField
           fullWidth
           label="ID do Usuário"
@@ -54,7 +55,8 @@ const TripRequestForm: React.FC = () => {
           onChange={(e) => setcustomer_id(e.target.value)}
           variant="outlined"
           margin="normal"
-        />
+      />
+      </Tooltip>
         <TextField
           fullWidth
           label="Endereço de Origem"

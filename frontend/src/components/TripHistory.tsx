@@ -1,4 +1,11 @@
 import React, { useState } from 'react';
+import { format } from 'date-fns';
+import { Box, Typography, TextField, Select, MenuItem, Button, Alert, List, ListItem, ListItemText, Paper, Avatar } from '@mui/material';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+
 
 interface Trip {
   id: string;
@@ -54,44 +61,83 @@ function convertSecondsToTime(secondsString) {
 }
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-4 border rounded shadow">
-      <h2 className="text-xl font-bold mb-4">Histórico de Viagens</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <div className="space-y-4">
-        <input
-          type="text"
-          placeholder="ID do Usuário"
+    <Box maxWidth="md" mx="auto" mt={4} p={2} component={Paper} elevation={3}>
+      <Typography variant="h5" component="h2" gutterBottom>
+        Histórico de Viagens
+      </Typography>
+      {error && <Alert severity="error">{error}</Alert>}
+      <Box mb={2}>
+        <TextField
+          fullWidth
+          label="ID do Usuário"
           value={customer_id}
           onChange={(e) => setcustomer_id(e.target.value)}
-          className="w-full p-2 border rounded"
+          variant="outlined"
+          margin="normal"
         />
-        <select
+        <Select
+          fullWidth
           value={driverFilter}
           onChange={(e) => setDriverFilter(e.target.value)}
-          className="w-full p-2 border rounded"
+          variant="outlined"
+          margin="normal"
         >
-          <option value="Todos">Todos</option>
-          <option value="Motorista1">Motorista1</option>
-          <option value="Motorista2">Motorista2</option>
-        </select>
-        <button onClick={handleFilter} className="w-full bg-blue-500 text-white p-2 rounded">
+          <MenuItem value="Todos">Todos</MenuItem>
+          <MenuItem value="Motorista1">Motorista1</MenuItem>
+          <MenuItem value="Motorista2">Motorista2</MenuItem>
+        </Select>
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          onClick={handleFilter}
+          sx={{ mt: 2 }}
+        >
           Aplicar Filtro
-        </button>
-      </div>
-      <ul className="mt-4 space-y-4">
+        </Button>
+      </Box>
+      <List>
         {trips.map((trip) => (
-          <li key={trip.id} className="p-4 border rounded shadow">
-            <p>Data e Hora: {trip.date}</p>
-            <p>Nome do Motorista: {trip.driver.name}</p>
-            <p>Origem: {trip.origin}</p>
-            <p>Destino: {trip.destination}</p>
-            <p>Distância: {trip.distance/1000} Km</p>
-            <p>Tempo: {convertSecondsToTime(trip.duration)}</p>
-            <p>Valor: R$ {trip.value.toFixed(2)}</p>
-          </li>
+          <ListItem key={trip.id} component={Paper} sx={{ mb: 2, p: 2, display: 'flex', alignItems: 'center', backgroundColor: '#f5f5f5' }}>
+            <ListItemText
+              primary={
+                <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+                  {trip.driver.name}
+                </Typography>
+              }
+              secondary={
+                <>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <AccessTimeIcon sx={{ mr: 1 }} />
+                    <Typography component="span">{`Data: ${new Date(trip.date).toLocaleString()}`}</Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <LocationOnIcon sx={{ mr: 1 }} />
+                    <Typography component="span">Origem: {trip.origin}</Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <LocationOnIcon sx={{ mr: 1 }} />
+                    <Typography component="span">Destino: {trip.destination}</Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <DirectionsCarIcon sx={{ mr: 1 }} />
+                    <Typography component="span">Distância: {trip.distance / 1000} Km</Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <AccessTimeIcon sx={{ mr: 1 }} />
+                    <Typography component="span">Tempo: {convertSecondsToTime(trip.duration)}</Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center">
+                    <AttachMoneyIcon sx={{ mr: 1 }} />
+                    <Typography component="span">Valor: R$ {trip.value.toFixed(2)}</Typography>
+                  </Box>
+                </>
+              }
+            />
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
   );
 };
 

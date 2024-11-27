@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTrip } from '../context/TripContext';
-import { Box, Button, Card, CardContent, Typography, Alert } from '@mui/material';
+import { Box, Button, Card, CardContent, Typography, Alert, Rating } from '@mui/material';
 
 interface Driver {
   id: string;
@@ -14,7 +14,7 @@ interface Driver {
   }
   review: {
     rating: number,
-    review: string,
+    comment: string,
   }
   rating: number;
   value: number;
@@ -80,8 +80,12 @@ const TripOptions: React.FC = () => {
                 <Typography variant="h6" sx={{ color: 'primary.main' }}>{driver.name}</Typography>
                 <Typography>Descrição: {driver.description}</Typography>
                 <Typography>Veículo: {driver.vehicle}</Typography>
-                <Typography>Avaliação: {driver.review.rating}</Typography>
-                <Typography>Comentário: {driver.review.review}</Typography>
+                <Box sx={{display:"flex", alignItems:"center"}}>
+                  <Typography>Avaliação: </Typography>
+                  <Rating name="read-only" value={driver.review.rating} readOnly />
+                </Box>
+                
+                <Typography>Comentário: {driver.review.comment}</Typography>
                 <Typography>Valor: R${(driver.value * (tripData.distance / 1000)).toFixed(2)}</Typography>
                 <Button
                   onClick={() => handleChooseDriver(driver)}

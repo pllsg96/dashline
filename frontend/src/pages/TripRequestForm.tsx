@@ -46,43 +46,43 @@ const TripRequestForm: React.FC = () => {
         Solicitação de Viagem
       </Typography>
       {error && <Alert severity="error">{error}</Alert>}
-  <form onSubmit={handleSubmit}>
-      <Tooltip title="Utilize: 'randomIdCustomer' no ID do usuário">
-        <TextField
-          fullWidth
-          label="ID do Usuário"
-          value={customer_id}
-          onChange={(e) => setcustomer_id(e.target.value)}
-          variant="outlined"
-          margin="normal"
-      />
-      </Tooltip>
-        <TextField
-          fullWidth
-          label="Endereço de Origem"
-          value={origin}
-          onChange={(e) => setOrigin(e.target.value)}
-          variant="outlined"
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="Endereço de Destino"
-          value={destination}
-          onChange={(e) => setDestination(e.target.value)}
-          variant="outlined"
-          margin="normal"
-        />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          sx={{ mt: 2 }}
-        >
-          Estimar Valor
-        </Button>
-      </form>
+      <form onSubmit={handleSubmit}>
+          <Tooltip title="Utilize: 'randomIdCustomer' no ID do usuário">
+            <TextField
+              fullWidth
+              label="ID do Usuário"
+              value={customer_id}
+              onChange={(e) => setcustomer_id(e.target.value)}
+              variant="outlined"
+              margin="normal"
+          />
+          </Tooltip>
+            <TextField
+              fullWidth
+              label="Endereço de Origem"
+              value={origin}
+              onChange={(e) => setOrigin(e.target.value)}
+              variant="outlined"
+              margin="normal"
+            />
+            <TextField
+              fullWidth
+              label="Endereço de Destino"
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+              variant="outlined"
+              margin="normal"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+            >
+              Estimar Valor
+            </Button>
+          </form>
     </Box>
   );
 };

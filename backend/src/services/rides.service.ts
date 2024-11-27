@@ -177,7 +177,24 @@ public async getRidesByCustomerId(customer_id: string, driver_id?: string) {
           
         },
       });
-      return { status: 200, result: rides };
+    
+    const formatedData = {
+      customer_id: customer_id,
+      rides: rides.map(ride => ({
+        id: ride.id,
+        date: ride.date,
+        origin: ride.origin,
+        destination: ride.destination,
+        distance: ride.distance,
+        duration: ride.duration,
+        driver: {
+          id: ride.driver.id,
+          name: ride.driver.name
+        },
+        value: ride.value
+      }))
+    };
+      return { status: 200, result: formatedData };
     } catch (error) {
       return {
         status: 500,
@@ -185,9 +202,7 @@ public async getRidesByCustomerId(customer_id: string, driver_id?: string) {
         error_description: 'Failed to retrieve rides from the database',
       };
     }
-}
-  
-  
+  }
 }
 
 export default RidesService;

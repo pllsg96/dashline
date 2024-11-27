@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Select, MenuItem, Button, Alert, List, ListItem, ListItemText, Paper, Avatar } from '@mui/material';
+import { Box, Typography, TextField, Select, MenuItem, Button, Alert, List, ListItem, ListItemText, Paper } from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -9,12 +9,15 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 interface Trip {
   id: string;
   date: string;
-  driverName: string;
   origin: string;
   destination: string;
-  distance: string;
-  time: string;
-  price: number | null; // Permitir que price seja null
+  distance: number;
+  duration: string;
+  driver: {
+    id: number;
+    name: string;
+  };
+  value: number;
 }
 
 const TripHistory: React.FC = () => {
@@ -23,28 +26,27 @@ const TripHistory: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const handleFilter = async () => {
-    try {
-      let url = `http://localhost:3001/ride/${customer_id}`;
-      
-      if (driverFilter !== 'Todos') {
-        url += `?driver_id=${driverFilter}`;
-      }
+const handleFilter = async () => {
+  try {
+    let url = `http://localhost:3001/ride/${customer_id}`;
 
-      console.log(url, '------');
-
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Erro ao buscar histórico de viagens');
-      }
-      const data: Trip[] = await response.json();
-      setTrips(data);
-    } catch (err: any) {
-      setError(err.message);
+    if (driverFilter !== 'Todos') {
+      url += `?driver_id=${driverFilter}`;
     }
-  };
 
-function convertSecondsToTime(secondsString) {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Erro ao buscar histórico de viagens');
+    }
+    const data: { customer_id: string; rides: Trip[] } = await response.json();
+    setTrips(data.rides);
+  } catch (err: any) {
+    setError(err.message);
+  }
+};
+
+
+function convertSecondsToTime(secondsString: string) {
   // Remover o "s" do final e converter para número
   const totalSeconds = parseInt(secondsString.replace('s', ''), 10);
 
@@ -95,7 +97,7 @@ function convertSecondsToTime(secondsString) {
           Aplicar Filtro
         </Button>
       </Box>
-      <List>
+        <List>
         {trips.map((trip) => (
           <ListItem key={trip.id} component={Paper} sx={{ mb: 2, p: 2, display: 'flex', alignItems: 'center', backgroundColor: '#f5f5f5' }}>
             <ListItemText
@@ -120,7 +122,7 @@ function convertSecondsToTime(secondsString) {
                   </Box>
                   <Box display="flex" alignItems="center" mb={1}>
                     <DirectionsCarIcon sx={{ mr: 1 }} />
-                    <Typography component="span">Distância: {trip.distance / 1000} Km</Typography>
+                    <Typography component="span">Distância: {(trip.distance / 1000).toFixed(2)} Km</Typography>
                   </Box>
                   <Box display="flex" alignItems="center" mb={1}>
                     <AccessTimeIcon sx={{ mr: 1 }} />
@@ -136,6 +138,7 @@ function convertSecondsToTime(secondsString) {
           </ListItem>
         ))}
       </List>
+
     </Box>
   );
 };

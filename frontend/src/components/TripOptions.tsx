@@ -7,8 +7,16 @@ interface Driver {
   name: string;
   description: string;
   vehicle: string;
+  driver: {
+    id: number,
+    name: string,
+  }
+  review: {
+    rating: number,
+    review: string,
+  }
   rating: number;
-  price: number;
+  value: number;
 }
 
 const TripOptions: React.FC = () => {
@@ -26,7 +34,7 @@ const TripOptions: React.FC = () => {
   // Construir a URL do mapa estático com caminho
   const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?size=600x600&maptype=roadmap&markers=color:blue%7Clabel:O%7C${originCoords}&markers=color:red%7Clabel:D%7C${destinationCoords}&path=color:0x0000ff|weight:5|${originCoords}|${destinationCoords}&key=${googleMapsApiKey}`;
 
-const handleChooseDriver = async (driver: any) => {
+const handleChooseDriver = async (driver: Driver) => {
   try {
       
     const formatData = {
@@ -74,7 +82,7 @@ const handleChooseDriver = async (driver: any) => {
         {/* Lista de motoristas à direita */}
         <div className="flex-grow">
           <ul className="space-y-4">
-            {tripData.options.map((driver) => (
+            {tripData.options.map((driver: Driver) => (
               <li key={driver.id} className="p-4 border rounded shadow">
                 <p>Nome: {driver.name}</p>
                 <p>Descrição: {driver.description}</p>

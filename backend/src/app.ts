@@ -1,13 +1,13 @@
 import express from 'express';
-import dotenv from 'dotenv';
-import path from 'path';
+// import dotenv from 'dotenv';
+// import path from 'path';
 import costumersRouter from './routes/customers.routes';
 import driversRouter from './routes/drivers.routes';
 import reviewsRouter from './routes/reviews.routes';
 import ridesRouter from './routes/rides.routes';
 import cors from 'cors';
 
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const app = express();
 app.use(cors());
 

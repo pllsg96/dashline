@@ -13,8 +13,14 @@ RUN npm install
 # Copie o restante do código do aplicativo
 COPY . .
 
+# Ajuste as permissões do diretório de trabalho
+RUN chown -R node:node /app
+
+# Mude para o usuário node
+USER node
+
 # Exponha a porta que o aplicativo irá escutar
 EXPOSE 3025
 
-# Comando para iniciar o aplicativo
-CMD ["npm", "run", "start:dev"]
+# Comando para executar migrações e iniciar o aplicativo
+CMD ["sh", "-c", "npx prisma migrate dev && npm run start:dev"]

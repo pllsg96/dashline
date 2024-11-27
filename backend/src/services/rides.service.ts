@@ -23,12 +23,12 @@ class RidesService {
       const from = await getCoordinates(origin);
       const to = await getCoordinates(destination);
       const routeTrajectory = await getRoute(from, to);
-      const convertMetersToKm = routeTrajectory.distanceMeters / 1000;
+      const convertMetersToKm = routeTrajectory.routes[0].distanceMeters / 1000;
 
       const drivers = await prisma.drivers.findMany({
         where: {
           minKm: {
-            lte: 2,
+            lte: +convertMetersToKm,
           },
         },
         include: {

@@ -39,7 +39,7 @@ const handleChooseDriver = async (driver: any) => {
             id: driver.id,
             name: driver.name,
           },
-          value: (driver.value * (tripData.distance / 1000)).toFixed(2),
+          value: (driver.value * (tripData.distance / 1000)),
         }
       const response = await fetch('http://localhost:3001/ride/confirm', {
         method: 'PATCH',
@@ -81,7 +81,7 @@ const handleChooseDriver = async (driver: any) => {
                 <p>Veículo: {driver.vehicle}</p>
                 <p>Avaliação: {driver.review.rating}</p>
                 <p>Comentário: {driver.review.comment}</p>
-                <p>Valor: R${driver.value * (tripData.distance / 1000)}</p>
+                <p>Valor: R${(driver.value * (tripData.distance / 1000)).toFixed(2)}</p>
                 <button
                   onClick={() => handleChooseDriver(driver)}
                   className="mt-2 bg-green-500 text-white p-2 rounded"

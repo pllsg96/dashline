@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { format } from 'date-fns';
 import { Box, Typography, TextField, Select, MenuItem, Button, Alert, List, ListItem, ListItemText, Paper, Avatar } from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -80,7 +79,6 @@ function convertSecondsToTime(secondsString) {
           value={driverFilter}
           onChange={(e) => setDriverFilter(e.target.value)}
           variant="outlined"
-          margin="normal"
         >
           <MenuItem value="Todos">Todos</MenuItem>
           <MenuItem value="1">Homer Simpson</MenuItem>

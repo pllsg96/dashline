@@ -45,7 +45,7 @@ const TripOptions: React.FC = () => {
         },
         value: (driver.value * (tripData.distance / 1000)),
       };
-      const response = await fetch('http://localhost:3001/ride/confirm', {
+      const response = await fetch('http://localhost:8080/ride/confirm', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

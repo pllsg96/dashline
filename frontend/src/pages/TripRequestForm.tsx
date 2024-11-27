@@ -14,7 +14,7 @@ const TripRequestForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/ride/estimate', {
+      const response = await fetch('http://localhost:8080/ride/estimate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

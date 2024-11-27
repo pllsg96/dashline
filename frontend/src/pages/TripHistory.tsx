@@ -28,7 +28,7 @@ const TripHistory: React.FC = () => {
 
 const handleFilter = async () => {
   try {
-    let url = `http://localhost:3001/ride/${customer_id}`;
+    let url = `http://localhost:8080/ride/${customer_id}`;
 
     if (driverFilter !== 'Todos') {
       url += `?driver_id=${driverFilter}`;

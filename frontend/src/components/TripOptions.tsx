@@ -31,15 +31,15 @@ const handleChooseDriver = async (driver: any) => {
       
     const formatData = {
           customer_id: tripData.customer_id,
-          origin: tripData.origin,
-          destination: tripData.destination,
+          origin: tripData.originString,
+          destination: tripData.destinationString,
           distance: tripData.distance,
           duration: tripData.duration,
           driver: {
             id: driver.id,
             name: driver.name,
           },
-          value: driver.value * (tripData.distance / 1000),
+          value: (driver.value * (tripData.distance / 1000)).toFixed(2),
         }
       const response = await fetch('http://localhost:3001/ride/confirm', {
         method: 'PATCH',
@@ -49,7 +49,7 @@ const handleChooseDriver = async (driver: any) => {
         body: JSON.stringify(formatData)
       });
 
-      console.log(formatData, '-----------', tripData)
+      console.log(formatData, '-----------')
 
       if (!response.ok) {
         throw new Error('Erro ao confirmar a viagem');
